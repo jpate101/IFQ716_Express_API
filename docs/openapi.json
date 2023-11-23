@@ -1,0 +1,346 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Assignment 2",
+      "description": "A Description",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/user/register": {
+        "post": {
+          "summary": "Register a new user",
+          "requestBody": {
+            "description": "User registration data",
+            "required": true,
+            "content": {
+              "application/json": {
+                "example": {
+                  "email": "user@example.com",
+                  "password": "password123"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User registered successfully",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "message": "Registration successful"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Request body incomplete"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/login": {
+        "post": {
+          "summary": "User login",
+          "requestBody": {
+            "description": "User login data",
+            "required": true,
+            "content": {
+              "application/json": {
+                "example": {
+                  "email": "user@example.com",
+                  "password": "password123"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User logged in successfully",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "token": "your_jwt_token",
+                    "token_type": "Bearer",
+                    "expires_in": 3600
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Request body incomplete"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Invalid credentials"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/movies/search": {
+        "get": {
+          "summary": "Search movies",
+          "parameters": [
+            {
+              "name": "title",
+              "in": "query",
+              "description": "Title of the movie",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "year",
+              "in": "query",
+              "description": "Release year of the movie",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Page number for pagination",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "data": [
+                      {
+                        "title": "Movie Title",
+                        "year": 2023,
+                        "imdbID": "tt1234567"
+                      }
+                    ],
+                    "pagination": {
+                      "page": 1,
+                      "totalPages": 5
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Title query parameter is required"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/movies/data/{imdbID}": {
+        "get": {
+          "summary": "Get movie data by IMDb ID",
+          "parameters": [
+            {
+              "name": "imdbID",
+              "in": "path",
+              "description": "IMDb ID of the movie",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "data": {
+                      "Title": "Movie Title",
+                      "Year": 2023,
+                      "Runtime": "120 min",
+                      "Genre": "Action",
+                      "Director": "John Doe",
+                      "Writer": "Jane Smith",
+                      "Actors": "Actor1, Actor2",
+                      "Ratings": [
+                        {
+                          "Source": "Internet Movie Database",
+                          "Value": "8.5/10"
+                        }
+                      
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Invalid query parameters. imdbID is required."
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Movie not found",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Movie not found"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Internal Server Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/posters/add/{imdbId}": {
+        "post": {
+          "summary": "Upload a poster for a movie",
+          "parameters": [
+            {
+              "name": "imdbId",
+              "in": "path",
+              "description": "IMDb ID of the movie",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Poster uploaded successfully",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": false,
+                    "message": "Poster Uploaded Successfully"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Bad Request"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Internal Server Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/posters/{imdbId}": {
+        "get": {
+          "summary": "Get the poster for a movie",
+          "parameters": [
+            {
+              "name": "imdbId",
+              "in": "path",
+              "description": "IMDb ID of the movie",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "image/png": {
+                  "example": {
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Bad Request"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": true,
+                    "message": "Internal Server Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
